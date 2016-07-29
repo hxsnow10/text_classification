@@ -1,0 +1,35 @@
+Tutorial
+=============
+
+Itroduction
+-----------
+We offer TrainT,Train,Test,Debug functions.
+TrainT is a integerated way to train.
+
+Inside process
+-----------
+data process flow buildin includes:
+    get_raw:    get (X,y) from file
+    pre:        change X to better form(mainly Tokenization).
+    (grid_search: for train)
+    ext:        extract feature from X.
+    sel:        slect feature.
+    clf:        classification. 
+Refer to help for detailed and complete information.
+
+User Learning Process 
+-----------
+Follow these steps to get familar with our API.
+1. see templates/
+2. see example/
+3. see help(MakeData TrainT Train Test Debug Deploy)
+    REALLY iMPORTANT!example and templats only show some!
+
+Workflow Using
+----------
+1. prepare data and Makedata
+2. choose a .py from templates or make yourself or using model_params, config a train file.
+3. run and check.got back to [2] to update tmodel which includes userdictionary, stopwords, select.k, clf.params
+[4.] use final .py and other config to train all data to get final model.set pfrac=0, cv=1.
+5. now you get model(model,predict_model,nopre_model),you can use them to provide predict service.
+    for example, Deploy to platform service.

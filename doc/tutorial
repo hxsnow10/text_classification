@@ -1,0 +1,37 @@
+Tutorial
+=============
+
+Itroduction
+-----------
+We offer TrainT,Train,Test,Debug functions.
+TrainT is a integerated way to train.
+
+Inside process
+-----------
+data process flow buildin includes:
+    get_raw:    get (X,y) from file
+    pre:        change X to better form.
+    (grid_search: for train)
+    ext:        extract feature from X.
+    sel:        slect feature.
+    clf:        classification. 
+Refer to help for detailed and complete information.
+
+Learning process
+-----------
+Follow these steps to get familar with our API.
+1. see templates
+2. see help(TrainT Train Test Debug)
+2. see example/
+
+Workflow Using TrainT
+----------
+1. prepare balanced data
+2. choose a .py from templates or make yourself; config.
+3. run and check.got back to [2] to update , userdictionary, stopwords, select.k, clf.params, etc.
+[4.] use final .py and other config to train all data to get final model.set pfrac=0, cv=1.
+
+Deploy
+---------
+After train, model should be deployed to text_platform_service.
+use deploy

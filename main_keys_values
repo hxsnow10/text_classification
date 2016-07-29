@@ -1,0 +1,34 @@
+MAIN_KEYS_VALUES
+--------------------
+Here show keys and values for model_params
+	1. Keys include following s(selector)(must provided) and 
+	all function leave params(not show following, refer to sklearn
+	2. selector key related values is the indent string;leave params ralated values refer to sklearn
+    3. example is in ./example/3.second mode
+
+GridSearchCV	f
+	GridSearchCV.estimator	s
+		Pipeline	f
+			Pipeline.steps	f
+				steps.ext	s
+					CountVectorizer	f
+					HashingVectorizer	f
+					TfidfVectorizer	f
+				steps.sel	s
+					GenericUnivariateSelect	f
+					RFE	f
+					RFECV	f
+					VarianceThreshold	f
+					SelectKBest	f
+						SelectKBest.score_func	nn
+				steps.clf	s
+					LogisticRegression	f
+					SGDClassifier	f
+					SVC	f
+					NuSVC	f
+					LinearSVC	f
+					DecisionTreeClassifier	f
+					AdaBoostClassifier	f
+					RandomForestClassifier	f
+					MultinomialNB	f
+					KNeighborsClassifier	f

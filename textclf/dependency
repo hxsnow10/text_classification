@@ -1,0 +1,13 @@
+dependency
+=================
+
+external package dependency
+-------------------
+sklearn
+theano
+
+internal moudle pendency
+-------------------
+utils-->data,model,functions
+data,model-->functions
+functions-->script

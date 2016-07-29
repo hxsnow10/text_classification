@@ -1,0 +1,10 @@
+README
+-----------
+
+after train, how to use model:
+
+1. use this model to provide a real-time predict service
+   * deploy model to your text_platform_service directory.
+   * follow text_platform_service to call service and check
+
+2. see predict.py for some about direct predict.

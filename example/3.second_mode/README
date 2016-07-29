@@ -1,0 +1,13 @@
+README
+----------
+1. python example.py
+return report
+
+2. python makedata.py & python example2.py
+report new_report
+
+3. check two report
+find new_report is better, which show data or saying Make data balanced is important.
+
+4. How to use TrainT and model_params:
+    Refer to tutorial and main_keys_values

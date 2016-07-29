@@ -1,0 +1,18 @@
+STEP_bY_STEP
+==================
+
+很多时候，用pipeline去训练并不合适。
+比如说pipeline(pre,ext,sel,clf)
+当我们前3步的方法是确定的时候，而需要频繁在clf上调参，同时前3步需要花很多的时间5个小时，而训练clf只需要半小时。
+那么我们完全可以先把前3步先执行，保存结果然后训练clf.
+(所以你看到死板的框架的价值是有限的。trade-off between simplicity and flexity)
+所以说最好要功能独立完善有广度与深度的的模块系统。
+
+这里每个模型pre,ext,sel,clf都有2个主要方法、
+.fit(X,y)  .transform(X)  pipeline也是基于他们完成的。详情参考sklearn关于。pipeline的文档。
+
+这里以神经网络为例怎么使用StepByStep.(神经网络的make_data需要包括preprocess,transfom to num data)
+1. pipe=(pre,ext,sel),pipe.fit(X,y),save pipe.transform(X),y
+2. config *.ymal  train
+
+

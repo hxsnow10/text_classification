@@ -1,0 +1,6 @@
+Readme
+--------
+
+This is the source ocde of Makedata.See and test.
+
+API:from textclf.data import Makedata
