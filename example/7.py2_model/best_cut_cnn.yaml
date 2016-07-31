@@ -1,0 +1,130 @@
+'''
+TODO：以前的实现还有问题，如果要做best_cut
+，那么就不能Maxpooling,并且首先对所有类型的过滤子加权
+ 即用(50+50+25+25)的向量对卷积后的相乘，
+ 然后再直接把50个或25个加到一个地方去，然后在做best_cut.
+'''
+
+
+!obj:pylearn2.train.Train {
+    dataset: &train !obj:pylearn2.datasets.DenseDesignMatrix {
+        X: !pkl: 'train_X.npy' ,
+        y: !pkl: 'train_y.npy' ,
+    },
+    model: !obj:pylearn2.models.mlp.MLP {
+        input_space: !obj:pylearn2.space.VectorSpace {
+            dim: 51,
+        },
+        layers: [ 
+                !obj:pylearn2.models.mlp.DenseProjection {
+                        layer_name: 'projection',
+                        sen_len: 50,
+                        word_num: 200000 ,
+                        vec_len: &vec_len 200,
+                        irange: .05,
+                        word_vectors_path: 'all_weibo.vocab/vectors.npy',
+                        update: 'half',
+                        rule: !obj:textclf.model.theano.IndexMul {
+                            rule_path: 'rules.cfg' ,
+                            vocabulary: !obj:textclf.vocab.words.Vocabulary {
+                                input_dir: 'all_weibo.vocab',
+                            }
+                        }
+                    },
+                !obj:pylearn2.models.mlp.CompositeLayer {
+                    layer_name: 'cnn',
+                    layers: [
+                        !obj:pylearn2.models.mlp.ConvRectifiedLinear {
+                         layer_name: 'cnn1',
+                         output_channels: 50,
+                         irange: .05,
+                         kernel_shape: [1, 200],
+                         pool_type: 'max',
+                         pool_shape: [50, 1],
+                         pool_stride:[2,2],
+                        },
+                        !obj:pylearn2.models.mlp.ConvRectifiedLinear {
+                         layer_name: 'cnn2',
+                         output_channels: 50,
+                         irange: .05,
+                         kernel_shape: [2, 200],
+                         pool_type: 'max',
+                         pool_shape: [49, 1],
+                         pool_stride:[2,2],
+                        },
+                        !obj:pylearn2.models.mlp.ConvRectifiedLinear {
+                         layer_name: 'cnn3',
+                         output_channels: 25,
+                         irange: .05,
+                         kernel_shape: [3, 200],
+                         pool_type: 'max',
+                         pool_shape: [48, 1],
+                         pool_stride:[2,2],
+                        },
+                        !obj:pylearn2.models.mlp.ConvRectifiedLinear {
+                         layer_name: 'cnn4',
+                         output_channels: 25,
+                         irange: .05,
+                         kernel_shape: [4, 200],
+                         pool_type: 'max',
+                         pool_shape: [47, 1],
+                         pool_stride:[2,2],
+                        },
+                        ],
+                },
+                !obj:pylearn2.models.mlp.BestCut {
+                    layer_name: 'bestcut',
+                },
+                !obj:pylearn2.models.mlp.Merge {
+                    layer_name: 'merge'
+                },
+                ],
+    },
+    algorithm: !obj:pylearn2.training_algorithms.sgd.SGD {
+        batch_size: 100,
+        learning_rate: .001,
+        learning_rule: !obj:pylearn2.training_algorithms.learning_rule.Momentum {
+            init_momentum: .5
+        },
+        cost: !obj:pylearn2.costs.cost.SumOfCosts { costs: [
+            !obj:pylearn2.costs.mlp.dropout.Dropout { 
+                default_input_include_prob: 0.5,
+                default_input_scale: 2.0,
+            }, !obj:pylearn2.costs.mlp.WeightDecay {
+                coeffs: [ .0005, .0005, .0005 ]
+            },   
+            ]   
+        },  
+        monitoring_dataset:
+            {
+            'train': *train ,
+            'valid': !obj:pylearn2.datasets.DenseDesignMatrix {
+                X: !pkl: 'valid_X.npy' ,
+                y: !pkl: 'valid_y.npy' ,
+                },
+            'test': !obj:pylearn2.datasets.DenseDesignMatrix {
+                X: !pkl: 'test_X.npy' ,
+                y: !pkl: 'test_y.npy' ,
+                },
+            },
+        termination_criterion: !obj:pylearn2.termination_criteria.And {
+            criteria: [
+                !obj:pylearn2.termination_criteria.EpochCounter {
+                    max_epochs: 100
+                },
+            ]
+        },
+    },
+    extensions:
+        [ !obj:pylearn2.train_extensions.best_params.MonitorBasedSaveBest {
+             channel_name: 'valid_y_misclass',
+             save_path: "conv_1_half_update_vec_dropout4.pkl"
+        }, !obj:pylearn2.training_algorithms.learning_rule.MomentumAdjustor {
+            start: 1,
+            saturate: 20,
+            final_momentum: .99
+        }
+    ]
+}
+
+
